@@ -1,0 +1,57 @@
+{
+  "name": "@denno1000/genistudio-package",
+  "private": false,
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "bundle": "tsup src/index.ts"
+  },
+  "dependencies": {
+    "@denno1000/genistudio-package": "file:",
+    "@denno1000/react-package-pro": "file:",
+    "@mantine/hooks": "^7.12.2",
+    "@tanstack/react-query": "^5.53.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.437.0",
+    "react": "^18.3.1",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-dom": "^18.3.1",
+    "react-loading-skeleton": "^3.4.0",
+    "react-markdown": "^9.0.1",
+    "react-package-pro": "file:",
+    "react-simple-toasts": "^5.10.1",
+    "remark-gfm": "^4.0.0",
+    "tailwind-merge": "^2.5.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^9.9.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "globals": "^15.9.0",
+    "tailwindcss": "^3.4.10",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.0.1",
+    "vite": "^5.4.1"
+  },
+  "author": "Dennis Stephen Kamara",
+  "License": "MIT",
+  "keywords": [
+    "GeniStudio",
+    "Chatbot Builder"
+  ],
+  "homepage": "https://geneline-x.net/docs",
+  "github": {
+    "url": "https://github.com/Dennis2340/Geneline-X/chatbot-platform"
+  }
+}
