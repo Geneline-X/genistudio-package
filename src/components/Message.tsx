@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { Copy, Pen, User } from 'lucide-react';
 import remarkGfm from 'remark-gfm';
+import React from 'react';
 
 interface MessageProps {
   message: any;

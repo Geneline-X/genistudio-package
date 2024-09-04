@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useState, useEffect } from 'react';
-
+import React from 'react';
 const useChatbotConfig = (chatbotId: string) => {
   const [config, setConfig] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
