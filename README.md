@@ -1,50 +1,63 @@
-# React + TypeScript + Vite
+# Genistudio Configurable Chatbot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Installation
 
-Currently, two official plugins are available:
+To install the `@denno1000/genistudio-package`, run the following command in your project directory:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install @denno1000/genistudio-package
 
-## Expanding the ESLint configuration
+or, if you're using Yarn:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+yarn add @denno1000/genistudio-package
 
-- Configure the top-level `parserOptions` property like this:
+Usage
+After installing the package, you can easily integrate the configurable chatbot into your application by following these steps:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Import the ConfigurableChatbot Component
+In the file where you want to use the chatbot, import the ConfigurableChatbot component from the package:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+javascript
+Copy code
+import { ConfigurableChatbot } from '@denno1000/genistudio-package';
+2. Pass the chatbotId Prop
+The ConfigurableChatbot component requires a chatbotId prop, which should be provided when you use the component. The chatbotId uniquely identifies the chatbot configuration you want to use.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+3. Add the Component to Your JSX
+Place the ConfigurableChatbot component in your JSX code, and pass the chatbotId prop as shown below:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+javascript
+Copy code
+const App = () => {
+  return (
+    <div>
+      <h1>Welcome to Our Platform</h1>
+      <ConfigurableChatbot chatbotId="your-chatbot-id-here" />
+    </div>
+  );
+};
+
+export default App;
+Replace "your-chatbot-id-here" with the actual ID of the chatbot you wish to configure.
+
+4. Run Your Application
+Once you've added the component, start your application, and the chatbot should be integrated seamlessly.
+
+Example
+jsx
+Copy code
+import React from 'react';
+import { ConfigurableChatbot } from '@denno1000/genistudio-package';
+
+const App = () => {
+  return (
+    <div>
+      <h1>Our Support Bot</h1>
+      <ConfigurableChatbot chatbotId="12345" />
+    </div>
+  );
+};
+
+export default App;
+5. Additional Configuration
+For more advanced configurations, such as customizing the appearance or behavior of the chatbot, please refer to the advanced section of the documentation (coming soon).
