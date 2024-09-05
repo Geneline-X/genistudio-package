@@ -1,25 +1,26 @@
-// src/ChatInput.tsx
 import React, { useContext } from 'react';
 import { Send } from 'lucide-react';
 import { ChatContext } from './ChatContext';
+import { isValidEmail } from '../lib/utils';
 
 export interface ChatInputProps {
-  theme: {theme: {
-    primaryColor: string;
-    secondaryColor: string;
-    chatBubbleUserColor: string;
-    chatBubbleBotColor: string;
-    backgroundColor: string;
-    font: string;
-    fontSize: string;
-    fontColor?: string;
-  }};
+  theme: {
+    theme: {
+      primaryColor: string;
+      secondaryColor: string;
+      chatBubbleUserColor: string;
+      chatBubbleBotColor: string;
+      backgroundColor: string;
+      font: string;
+      fontSize: string;
+      fontColor?: string;
+    };
+  };
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
-  const { message, handleInputChange, addMessage, isLoading } = useContext(ChatContext);
+  const { message, handleInputChange, addMessage, isLoading,email } = useContext(ChatContext);
 
-  console.log(theme)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -33,6 +34,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
     borderTop: `1px solid ${theme.theme.primaryColor}`,
     marginTop: 3,
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   };
@@ -68,9 +70,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
     pointerEvents: isLoading ? 'none' : 'auto',
   };
 
-  // const iconStyle: React.CSSProperties = {
-  //   color: '#fff',
-  // };
+  const footerTextStyle: React.CSSProperties = {
+    marginTop: '8px',
+    fontSize: '12px',
+    color: theme.theme.fontColor || '#888',
+    fontFamily: theme.theme.font,
+    textAlign: 'center',
+  };
 
   return (
     <div style={containerStyle}>
@@ -82,12 +88,15 @@ const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
           onKeyDown={handleKeyDown}
           style={textareaStyle}
           rows={3}
-          disabled={isLoading}
+          disabled={!isValidEmail(email) || isLoading}
         />
         <button onClick={addMessage} style={buttonStyle} disabled={isLoading}>
           <Send size={20} />
         </button>
       </div>
+      <p style={footerTextStyle}>
+        Powered by <strong>Geneline-X</strong>
+      </p>
     </div>
   );
 };

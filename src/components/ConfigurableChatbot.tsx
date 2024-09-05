@@ -22,7 +22,7 @@ const defaultTheme = {theme: {
 }};
 
 const ConfigurableChatbot: React.FC<ConfigurableChatbotProps> = ({ chatbotId }) => {
-  const { config, isLoading: configLoading, error: configError } = useChatbotConfig(chatbotId);
+  const { config, } = useChatbotConfig(chatbotId);
   const [theme, setTheme] = useState(defaultTheme);
   const [otherProps, setOtherProps] = useState({ widget: { welcomeMessage: '' } });
   const [isOpen, setIsOpen] = useState(false);
@@ -37,9 +37,7 @@ const ConfigurableChatbot: React.FC<ConfigurableChatbotProps> = ({ chatbotId }) 
     }
   }, [config]);
 
-  if (configLoading) return <div>Loading...</div>;
-  if (configError) return <div>Error loading chatbot configuration</div>;
-
+ 
   const chatContainerStyle: React.CSSProperties = {
     backgroundColor: theme.theme.backgroundColor,
     fontFamily: theme.theme.font,
