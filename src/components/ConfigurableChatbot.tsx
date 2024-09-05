@@ -87,7 +87,7 @@ const ConfigurableChatbot: React.FC<ConfigurableChatbotProps> = ({ chatbotId }) 
           <ChatContextProvider chatbotId={chatbotId}>
             <ChatHeader avatar={config?.logo} name={config?.name} theme={theme} welcomeMessage={otherProps?.widget?.welcomeMessage} />
             <div style={{ flex: 1, overflowY: 'auto' }}> {/* Ensure Messages scrolls */}
-              <Messages chatbotId={chatbotId} theme={theme} />
+              <Messages chatbotId={chatbotId} theme={theme} welcomeMessage={otherProps?.widget?.welcomeMessage}/>
             </div>
             <ChatInput theme={theme} />
           </ChatContextProvider>

@@ -15,6 +15,8 @@ type StreamResponseType = {
     fetchNextPage: () => void;
     hasNextPage: boolean;
     messagesData: { messages: MessageType[]; nextCursor: string | null };
+    email: string,
+    setEmail: React.Dispatch<React.SetStateAction<string>>
 };
 
 // Create the context with default values
@@ -28,6 +30,8 @@ export const ChatContext = createContext<StreamResponseType>({
     fetchNextPage: () => {},
     hasNextPage: false,
     messagesData: { messages: [], nextCursor: null },
+    email: "",
+    setEmail: () => { }
 });
 
 interface Props {
@@ -45,10 +49,10 @@ interface MessageType {
 }
 
 // Fetch messages with pagination
-const fetchMessages = async ({ chatbotId, cursor, limit = 20 }: { chatbotId: string; cursor?: string; limit?: number }) => {
-    const response = await fetch("http://localhost:3001/api/getmessages", {
+const fetchMessages = async ({ chatbotId, cursor, limit = 20, email }: { chatbotId: string; cursor?: string; limit?: number, email:string }) => {
+    const response = await fetch("https://geni-studio.vercel.app/api/getmessages", {
         method: "POST",
-        body: JSON.stringify({ chatbotId, cursor, limit }),
+        body: JSON.stringify({ chatbotId, cursor, limit, email }),
         headers: { "Content-Type": "application/json" },
     });
 
@@ -61,10 +65,10 @@ const fetchMessages = async ({ chatbotId, cursor, limit = 20 }: { chatbotId: str
 };
 
 // Send a new message
-const sendMessageApi = async ({ chatbotId, message }: { chatbotId: string; message: string }) => {
-    const response = await fetch("http://localhost:3001/api/message", {
+const sendMessageApi = async ({ chatbotId, message, email }: { chatbotId: string; message: string, email:string }) => {
+    const response = await fetch("https://geni-studio.vercel.app/api/message", {
         method: "POST",
-        body: JSON.stringify({ chatbotId, message }),
+        body: JSON.stringify({ chatbotId, message, email }),
         headers: { "Content-Type": "application/json" },
     });
 
@@ -85,13 +89,14 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
         nextCursor: null,
     });
     const [hasNextPage, setHasNextPage] = useState<boolean>(false);
+    const [email, setEmail] = useState<string>("")
 
     const backupMessage = useRef<string>("");
 
     const fetchMessagesData = async (cursor: string | null = null) => {
         setIsFetchingMessages(true);
         try {
-            const data = await fetchMessages({ chatbotId, cursor });
+            const data = await fetchMessages({ chatbotId, cursor, email });
             setMessagesData((prev) => ({
                 messages: cursor ? [...prev.messages, ...data.messages] : data.messages,
                 nextCursor: data.nextCursor,
@@ -135,7 +140,7 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
         }));
 
         try {
-            const stream = await sendMessageApi({ chatbotId, message: newMessageObj.text });
+            const stream = await sendMessageApi({ chatbotId, message: newMessageObj.text, email });
             if (!stream) {
                 throw new Error("No stream received");
             }
@@ -217,7 +222,9 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
                 fetchNextPage,
                 hasNextPage,
                 messagesData,
-                isFetchingMessages
+                isFetchingMessages,
+                email,
+                setEmail,
             }}
         >
             {children}

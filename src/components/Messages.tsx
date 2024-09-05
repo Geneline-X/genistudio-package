@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 import Message from './Message';
 import { ChatContext } from './ChatContext';
 import { useIntersection } from '@mantine/hooks';
+import EmailPromptForm from './EmailPromptForm';
 
 interface MessagesProps {
   chatbotId: string;
+  welcomeMessage: string;
   theme: { theme: {
     primaryColor: string;
     secondaryColor: string;
@@ -25,6 +27,7 @@ interface MessagesProps {
 const Messages: React.FC<MessagesProps> = ({ 
   chatbotId, 
   theme,  
+  welcomeMessage,
 }) => {
   const {
     isLoading: isAiThinking,
@@ -32,8 +35,11 @@ const Messages: React.FC<MessagesProps> = ({
     fetchNextPage,
     hasNextPage,
     messagesData,
+    setEmail,
   } = useContext(ChatContext);
 
+  const [showEmailPrompt, setShowEmailPrompt] = useState(true);
+  
   const messages = messagesData?.messages || [];
 
   const loadingMessage = {
@@ -80,6 +86,18 @@ const Messages: React.FC<MessagesProps> = ({
     }
   }, [entry, fetchNextPage, hasNextPage, isFetchingMessages]);
 
+  const handleEmailSubmit = (email: string) => {
+    setEmail(email);
+    console.log(email)
+    setShowEmailPrompt(false);
+  };
+  if (messages?.length === 0 && showEmailPrompt) {
+    return <EmailPromptForm 
+    onEmailSubmit={handleEmailSubmit} 
+    theme={theme.theme}
+    welcomeMessage={welcomeMessage}
+    />
+  }
   return (
     <div
       style={{
@@ -118,7 +136,7 @@ const Messages: React.FC<MessagesProps> = ({
       ) : (
         <div style={{ margin: 'auto', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px', padding: '16px', textAlign: 'center' }}>
           <MessageSquare style={{ height: '40px', width: '40px', color: '#9e9e9e' }} />
-          <span style={{ fontSize: '14px', color: '#9e9e9e' }}>How Can I Help You</span>
+          <span style={{ fontSize: '14px', color: '#9e9e9e' }}>{welcomeMessage}</span>
         </div>
       )}
     </div>
