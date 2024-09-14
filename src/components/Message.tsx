@@ -2,7 +2,7 @@
 import { forwardRef, useState, useMemo, memo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { Copy, Pen, User } from 'lucide-react';
+import { Copy, Pen, User, Check } from 'lucide-react';
 import remarkGfm from 'remark-gfm';
 import React from 'react';
 
@@ -24,27 +24,20 @@ interface MessageProps {
   };
 }
 
-const currentTime = new Date();
-const formattedTime = `${currentTime.getHours()}:${currentTime
-  .getMinutes()
-  .toString()
-  .padStart(2, '0')}`;
-
 const Message = forwardRef<HTMLDivElement, MessageProps>(
   ({ message, isNextMessageSamePerson, theme }, ref) => {
     const [isCopied, setIsCopied] = useState(false);
 
     const handleCopy = () => {
       setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 1500); // Reset the copy state after 1.5 seconds
+      setTimeout(() => setIsCopied(false), 1500);
     };
 
-    // Memoize inline styles
-    const avatarStyle:React.CSSProperties = useMemo(
+    const avatarStyle: React.CSSProperties = useMemo(
       () => ({
         position: 'relative',
-        width: '32px',
-        height: '32px',
+        width: '36px',
+        height: '36px',
         backgroundColor: message.isUserMessage
           ? theme.theme.chatBubbleUserColor
           : theme.theme.chatBubbleBotColor,
@@ -52,43 +45,62 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: '0 5px',
+        margin: '0 10px',
         visibility: isNextMessageSamePerson ? 'hidden' : 'visible',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
       }),
       [message.isUserMessage, theme.theme.chatBubbleUserColor, theme.theme.chatBubbleBotColor, isNextMessageSamePerson]
     );
 
-    const messageContainerStyle:React.CSSProperties = useMemo(
+    const messageContainerStyle: React.CSSProperties = useMemo(
       () => ({
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: '450px',
-        margin: '0 5px',
-        textAlign: message.isUserMessage ? 'right' : 'left',
+        maxWidth: '70%',
+        margin: '4px 0',
       }),
-      [message.isUserMessage]
+      []
     );
 
     const bubbleStyle: React.CSSProperties = useMemo(
       () => ({
-        padding: '10px 18px',
-        borderRadius: '15px',
+        padding: '12px 16px',
+        borderRadius: '18px',
         backgroundColor: message.isUserMessage
           ? theme.theme.chatBubbleUserColor
           : theme.theme.chatBubbleBotColor,
         color: theme.theme.fontColor || '#000000',
-        borderBottomLeftRadius:
-          !isNextMessageSamePerson && message.isUserMessage ? '0' : undefined,
-        borderBottomRightRadius:
-          !isNextMessageSamePerson && !message.isUserMessage ? '0' : undefined,
+        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+        borderBottomLeftRadius: !isNextMessageSamePerson && !message.isUserMessage ? '4px' : undefined,
+        borderBottomRightRadius: !isNextMessageSamePerson && message.isUserMessage ? '4px' : undefined,
       }),
-      [
-        message.isUserMessage,
-        theme.theme.chatBubbleUserColor,
-        theme.theme.chatBubbleBotColor,
-        theme.theme.fontColor,
-        isNextMessageSamePerson,
-      ]
+      [message.isUserMessage, theme.theme.chatBubbleUserColor, theme.theme.chatBubbleBotColor, theme.theme.fontColor, isNextMessageSamePerson]
+    );
+
+    const timeStyle: React.CSSProperties = useMemo(
+      () => ({
+        fontSize: '11px',
+        color: message.isUserMessage ? `${theme.theme.chatBubbleUserColor}99` : `${theme.theme.chatBubbleBotColor}99`,
+        marginTop: '4px',
+        alignSelf: message.isUserMessage ? 'flex-end' : 'flex-start',
+      }),
+      [message.isUserMessage, theme.theme.chatBubbleUserColor, theme.theme.chatBubbleBotColor]
+    );
+
+    const copyButtonStyle: React.CSSProperties = useMemo(
+      () => ({
+        fontSize: '12px',
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer',
+        border: 'none',
+        background: 'none',
+        color: message.isUserMessage ? `${theme.theme.chatBubbleUserColor}CC` : `${theme.theme.chatBubbleBotColor}CC`,
+        padding: '4px 8px',
+        borderRadius: '12px',
+        transition: 'background-color 0.2s ease',
+      }),
+      [message.isUserMessage, theme.theme.chatBubbleUserColor, theme.theme.chatBubbleBotColor]
     );
 
     return (
@@ -98,16 +110,12 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: message.isUserMessage ? 'flex-end' : 'flex-start',
-          margin: '8px 0',
+          margin: '12px 0',
         }}
       >
-        <div style={avatarStyle}>
-          {message.isUserMessage ? (
-            <User style={{ color: '#ffffff', height: '75%', width: '75%' }} />
-          ) : (
-            <Pen style={{ color: '#000000' }} />
-          )}
-        </div>
+        {!message.isUserMessage && <div style={avatarStyle}>
+          <Pen style={{ color: '#ffffff', height: '60%', width: '60%' }} />
+        </div>}
         <div style={messageContainerStyle}>
           <div style={bubbleStyle}>
             {typeof message.text === 'string' ? (
@@ -118,7 +126,7 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
                     <a
                       {...props}
                       style={{
-                        color: theme.theme.chatBubbleBotColor,
+                        color: theme.theme.primaryColor,
                         textDecoration: 'underline',
                       }}
                       target="_blank"
@@ -134,63 +142,37 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
             ) : (
               message.text
             )}
-            {message.id !== 'loading-message' && (
-              <>
-                <div
-                  style={{
-                    fontSize: '12px',
-                    color: message.isUserMessage ? '#1e90ff' : '#9e9e9e',
-                    marginTop: '4px',
-                    textAlign: message.isUserMessage ? 'right' : 'left',
-                  }}
-                >
-                  {formattedTime}
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: message.isUserMessage
-                      ? 'flex-end'
-                      : 'flex-start',
-                    marginTop: '4px',
-                  }}
-                >
-                  <CopyToClipboard
-                    text={message.text as string}
-                    onCopy={handleCopy}
-                  >
-                    <button
-                      style={{
-                        fontSize: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                        border: 'none',
-                        background: 'none',
-                        color: message.isUserMessage ? '#ffffff' : '#1e90ff',
-                      }}
-                    >
-                      {isCopied ? (
-                        'Copied!'
-                      ) : (
-                        <>
-                          <Copy
-                            style={{
-                              marginRight: '4px',
-                              width: '16px',
-                              height: '16px',
-                            }}
-                          />
-                          Copy
-                        </>
-                      )}
-                    </button>
-                  </CopyToClipboard>
-                </div>
-              </>
-            )}
           </div>
+          {message.id !== 'loading-message' && (
+            <>
+              <div style={timeStyle}>
+                {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </div>
+              <CopyToClipboard text={message.text as string} onCopy={handleCopy}>
+                <button
+                  style={copyButtonStyle}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = `${theme.theme.primaryColor}20`}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  {isCopied ? (
+                    <>
+                      <Check style={{ marginRight: '4px', width: '14px', height: '14px' }} />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy style={{ marginRight: '4px', width: '14px', height: '14px' }} />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </CopyToClipboard>
+            </>
+          )}
         </div>
+        {message.isUserMessage && <div style={avatarStyle}>
+          <User style={{ color: '#ffffff', height: '60%', width: '60%' }} />
+        </div>}
       </div>
     );
   }
@@ -198,5 +180,4 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
 
 Message.displayName = 'Message';
 
-// Memoize the component to avoid unnecessary re-renders
 export default memo(Message);

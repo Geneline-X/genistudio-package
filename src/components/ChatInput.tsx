@@ -1,15 +1,12 @@
 import React, { useContext } from 'react';
 import { Send } from 'lucide-react';
 import { ChatContext } from './ChatContext';
-import { isValidEmail } from '../lib/utils';
 
 export interface ChatInputProps {
   theme: {
     theme: {
       primaryColor: string;
       secondaryColor: string;
-      chatBubbleUserColor: string;
-      chatBubbleBotColor: string;
       backgroundColor: string;
       font: string;
       fontSize: string;
@@ -19,7 +16,7 @@ export interface ChatInputProps {
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
-  const { message, handleInputChange, addMessage, isLoading,email } = useContext(ChatContext);
+  const { message, handleInputChange, addMessage, isLoading, showChatInput } = useContext(ChatContext);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -29,74 +26,91 @@ const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
   };
 
   const containerStyle: React.CSSProperties = {
-    padding: '10px',
+    padding: '20px',
     backgroundColor: theme.theme.backgroundColor,
-    borderTop: `1px solid ${theme.theme.primaryColor}`,
-    marginTop: 3,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderTop: `1px solid ${theme.theme.primaryColor}20`,
   };
 
-  const wrapperStyle: React.CSSProperties = {
+  const inputWrapperStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
-    width: '100%',
-    maxWidth: '768px', // corresponds to the max-w-3xl in Tailwind
-    gap: '8px',
+    maxWidth: '800px',
+    margin: '0 auto',
+    position: 'relative',
   };
 
   const textareaStyle: React.CSSProperties = {
-    flex: 1,
-    padding: '8px',
-    backgroundColor: 'transparent',
+    width: '100%',
+    padding: '12px 50px 12px 16px', // Increased right padding to accommodate the button
+    backgroundColor: theme.theme.secondaryColor,
     color: theme.theme.fontColor || '#000',
-    border: `1px solid ${theme.theme.primaryColor}`,
-    borderRadius: '8px',
+    border: `1px solid ${theme.theme.primaryColor}30`,
+    borderRadius: '24px',
     resize: 'none',
     outline: 'none',
     fontFamily: theme.theme.font,
     fontSize: theme.theme.fontSize,
+    lineHeight: '1.5',
+    minHeight: '48px',
+    maxHeight: '120px',
+    overflow: 'auto',
+    transition: 'border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
   };
 
   const buttonStyle: React.CSSProperties = {
+    position: 'absolute',
+    right: '10px',
+    bottom: '10px',
     backgroundColor: theme.theme.primaryColor,
-    padding: '8px',
+    color: theme.theme.secondaryColor,
+    padding: '10px',
     borderRadius: '50%',
     cursor: 'pointer',
-    transition: 'background-color 0.3s ease-in-out',
-    opacity: isLoading ? 0.5 : 1,
-    pointerEvents: isLoading ? 'none' : 'auto',
+    border: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s ease-in-out',
+    opacity: isLoading || !message.trim() ? 0.7 : 1,
+    pointerEvents: isLoading || !message.trim() ? 'none' : 'auto',
+    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.2)',
+    transform: 'scale(1)',
   };
 
-  const footerTextStyle: React.CSSProperties = {
-    marginTop: '8px',
-    fontSize: '12px',
-    color: theme.theme.fontColor || '#888',
-    fontFamily: theme.theme.font,
-    textAlign: 'center',
+  // Add this new style for hover effect
+  const buttonHoverStyle: React.CSSProperties = {
+    ...buttonStyle,
+    backgroundColor: theme.theme.primaryColor,
+    transform: 'scale(1.05)',
+    boxShadow: '0 3px 7px rgba(0, 0, 0, 0.3)',
   };
 
   return (
     <div style={containerStyle}>
-      <div style={wrapperStyle}>
+      {showChatInput ? (
+        <div style={inputWrapperStyle}>
         <textarea
           placeholder="Type a message..."
           value={message}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           style={textareaStyle}
-          rows={3}
-          disabled={!isValidEmail(email) || isLoading}
+          rows={1}
+          disabled={isLoading}
         />
-        <button onClick={addMessage} style={buttonStyle} disabled={isLoading}>
-          <Send size={20} />
+        <button 
+          onClick={addMessage} 
+          style={buttonStyle} 
+          onMouseEnter={(e) => Object.assign(e.currentTarget.style, buttonHoverStyle)}
+          onMouseLeave={(e) => Object.assign(e.currentTarget.style, buttonStyle)}
+          disabled={isLoading || !message.trim()}
+          title="Send message"
+        >
+          <Send size={22} />
         </button>
       </div>
-      <p style={footerTextStyle}>
-        Powered by <strong>Geneline-X</strong>
-      </p>
+      ):null}
+      
     </div>
   );
 };

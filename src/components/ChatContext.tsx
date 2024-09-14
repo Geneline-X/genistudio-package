@@ -17,6 +17,8 @@ type StreamResponseType = {
     messagesData: { messages: MessageType[]; nextCursor: string | null };
     email: string,
     setEmail: React.Dispatch<React.SetStateAction<string>>
+    showChatInput: boolean;
+    setShowChatInput: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // Create the context with default values
@@ -31,7 +33,9 @@ export const ChatContext = createContext<StreamResponseType>({
     hasNextPage: false,
     messagesData: { messages: [], nextCursor: null },
     email: "",
-    setEmail: () => { }
+    setEmail: () => { },
+    showChatInput: false,
+    setShowChatInput: () => { },
 });
 
 interface Props {
@@ -90,6 +94,7 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
     });
     const [hasNextPage, setHasNextPage] = useState<boolean>(false);
     const [email, setEmail] = useState<string>("")
+    const [showChatInput, setShowChatInput] = useState(false);
 
     const backupMessage = useRef<string>("");
 
@@ -225,6 +230,8 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
                 isFetchingMessages,
                 email,
                 setEmail,
+                showChatInput,
+                setShowChatInput
             }}
         >
             {children}
