@@ -29,11 +29,15 @@ const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
     padding: '20px',
     backgroundColor: theme.theme.backgroundColor,
     borderTop: `1px solid ${theme.theme.primaryColor}20`,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   };
 
   const inputWrapperStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
+    width: '100%',
     maxWidth: '800px',
     margin: '0 auto',
     position: 'relative',
@@ -41,7 +45,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
 
   const textareaStyle: React.CSSProperties = {
     width: '100%',
-    padding: '12px 50px 12px 16px', // Increased right padding to accommodate the button
+    padding: '12px 50px 12px 16px',
     backgroundColor: theme.theme.secondaryColor,
     color: theme.theme.fontColor || '#000',
     border: `1px solid ${theme.theme.primaryColor}30`,
@@ -77,7 +81,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
     transform: 'scale(1)',
   };
 
-  // Add this new style for hover effect
   const buttonHoverStyle: React.CSSProperties = {
     ...buttonStyle,
     backgroundColor: theme.theme.primaryColor,
@@ -85,32 +88,56 @@ const ChatInput: React.FC<ChatInputProps> = ({ theme }) => {
     boxShadow: '0 3px 7px rgba(0, 0, 0, 0.3)',
   };
 
+  const poweredByStyle: React.CSSProperties = {
+    marginTop: '12px',
+    padding: '6px 12px',
+    borderRadius: '20px',
+    backgroundColor: `${theme.theme.primaryColor}10`,
+    display: 'inline-block',
+    textAlign: 'center',
+  };
+
+  const poweredByTextStyle: React.CSSProperties = {
+    fontSize: '12px',
+    color: theme.theme.primaryColor,
+    fontFamily: theme.theme.font,
+    fontWeight: 500,
+    margin: 0,
+  };
+
   return (
     <div style={containerStyle}>
-      {showChatInput ? (
+      {showChatInput && (
         <div style={inputWrapperStyle}>
-        <textarea
-          placeholder="Type a message..."
-          value={message}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          style={textareaStyle}
-          rows={1}
-          disabled={isLoading}
-        />
-        <button 
-          onClick={addMessage} 
-          style={buttonStyle} 
-          onMouseEnter={(e) => Object.assign(e.currentTarget.style, buttonHoverStyle)}
-          onMouseLeave={(e) => Object.assign(e.currentTarget.style, buttonStyle)}
-          disabled={isLoading || !message.trim()}
-          title="Send message"
-        >
-          <Send size={22} />
-        </button>
-      </div>
-      ):null}
-      
+          <textarea
+            placeholder="Type a message..."
+            value={message}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            style={textareaStyle}
+            rows={1}
+            disabled={isLoading}
+          />
+          <button 
+            onClick={addMessage} 
+            style={buttonStyle} 
+            onMouseEnter={(e) => Object.assign(e.currentTarget.style, buttonHoverStyle)}
+            onMouseLeave={(e) => Object.assign(e.currentTarget.style, buttonStyle)}
+            disabled={isLoading || !message.trim()}
+            title="Send message"
+          >
+            <Send size={22} />
+          </button>
+        </div>
+      )}
+
+      <a href="https://geneline-x.net" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+        <div style={poweredByStyle}>
+          <p style={poweredByTextStyle}>
+            Powered by <span style={{ fontWeight: 700 }}>Geneline-X</span>
+          </p>
+        </div>
+      </a>
     </div>
   );
 };

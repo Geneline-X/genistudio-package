@@ -19,6 +19,8 @@ type StreamResponseType = {
     setEmail: React.Dispatch<React.SetStateAction<string>>
     showChatInput: boolean;
     setShowChatInput: React.Dispatch<React.SetStateAction<boolean>>;
+    chatContainerRef: React.RefObject<HTMLDivElement>;
+
 };
 
 // Create the context with default values
@@ -36,11 +38,13 @@ export const ChatContext = createContext<StreamResponseType>({
     setEmail: () => { },
     showChatInput: false,
     setShowChatInput: () => { },
+    chatContainerRef: { current: null },
 });
 
 interface Props {
     chatbotId: string;
     children: ReactNode;
+    chatContainerRef: React.RefObject<HTMLDivElement>;
 }
 
 // Define the structure of a message (adjust as per your API's response)
@@ -83,7 +87,7 @@ const sendMessageApi = async ({ chatbotId, message, email }: { chatbotId: string
     return response.body;
 };
 
-export const ChatContextProvider = ({ chatbotId, children }: Props) => {
+export const ChatContextProvider = ({ chatbotId, children, chatContainerRef }: Props) => {
     // Local state for the input message
     const [message, setMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -97,6 +101,12 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
     const [showChatInput, setShowChatInput] = useState(false);
 
     const backupMessage = useRef<string>("");
+
+    const scrollToBottom = () => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    };
 
     const fetchMessagesData = async (cursor: string | null = null) => {
         setIsFetchingMessages(true);
@@ -144,6 +154,8 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
             messages: [newMessageObj, ...prev.messages],
         }));
 
+        setTimeout(scrollToBottom, 0);
+
         try {
             const stream = await sendMessageApi({ chatbotId, message: newMessageObj.text, email });
             if (!stream) {
@@ -188,6 +200,7 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
                             messages: updatedMessages,
                         };
                     });
+                    scrollToBottom();
                 }
             }
             // trigger new messages //
@@ -231,7 +244,8 @@ export const ChatContextProvider = ({ chatbotId, children }: Props) => {
                 email,
                 setEmail,
                 showChatInput,
-                setShowChatInput
+                setShowChatInput,
+                chatContainerRef
             }}
         >
             {children}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ChatHeader from './ChatHeader';
 import ChatInput from './ChatInput';
 import Messages from './Messages';
@@ -29,6 +29,8 @@ const ConfigurableChatbot: React.FC<ConfigurableChatbotProps> = ({ chatbotId }) 
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth <= 768;
   
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (config?.theme) {
       const themeConfig = config.theme;
@@ -82,9 +84,9 @@ const ConfigurableChatbot: React.FC<ConfigurableChatbotProps> = ({ chatbotId }) 
       </div>
       <div style={chatContainerStyle}>
         {isOpen && (
-          <ChatContextProvider chatbotId={chatbotId}>
+          <ChatContextProvider chatContainerRef={chatContainerRef} chatbotId={chatbotId}>
             <ChatHeader avatar={config?.logo} name={config?.name} theme={theme} welcomeMessage={otherProps?.widget?.welcomeMessage} />
-            <div style={{ flex: 1, overflowY: 'auto' }}> {/* Ensure Messages scrolls */}
+            <div ref={chatContainerRef} style={{ flex: 1, overflowY: 'auto' }}> {/* Ensure Messages scrolls */}
               <Messages chatbotId={chatbotId} theme={theme} welcomeMessage={otherProps?.widget?.welcomeMessage}/>
             </div>
             <ChatInput theme={theme} />
