@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, } from 'react';
 import { MessageSquare } from 'lucide-react';
 import Skeleton from 'react-loading-skeleton';
 import Message from './Message';
@@ -22,12 +22,16 @@ interface MessagesProps {
     fontColor?: string;
   }};
   infiniteQueryLimit?: number; // Optional: Limit for pagination
+  onEmailSubmit?: () => void; // Add this prop
+  showEmailPrompt?: boolean;
 }
 
 const Messages: React.FC<MessagesProps> = ({ 
   chatbotId, 
   theme,  
   welcomeMessage,
+  onEmailSubmit,
+  showEmailPrompt,
 }) => {
   const {
     isLoading: isAiThinking,
@@ -38,7 +42,7 @@ const Messages: React.FC<MessagesProps> = ({
     setEmail,
   } = useContext(ChatContext);
 
-  const [showEmailPrompt, setShowEmailPrompt] = useState(true);
+  // const [showEmailPrompt, setShowEmailPrompt] = useState(true);
   
   const messages = messagesData?.messages || [];
 
@@ -88,8 +92,8 @@ const Messages: React.FC<MessagesProps> = ({
 
   const handleEmailSubmit = (email: string) => {
     setEmail(email);
-    console.log(email)
-    setShowEmailPrompt(false);
+    // setShowEmailPrompt(false);
+    onEmailSubmit?.(); // Call the parent's callback
   };
   if (messages?.length === 0 && showEmailPrompt) {
     return <EmailPromptForm 

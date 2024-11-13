@@ -11,7 +11,7 @@ const useChatbotConfig = (chatbotId: string) => {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/api/getbrand`,{
+        const response = await fetch(`https://genistud.io/api/getbrand`,{
             method: "POST",
             body: JSON.stringify({chatbotId})
         });

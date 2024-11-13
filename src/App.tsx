@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-     <ConfigurableChatbot chatbotId='cm0qzdezd0001tahvie2m007b' apiKey='clzbl9w3g000hgkbqpkeb64on'/>
+     <ConfigurableChatbot chatbotId="cm3erpoj5000111oizy6npk04" apiKey='clzbl9w3g000hgkbqpkeb64on'/>
     </>
   )
 }

@@ -58,7 +58,7 @@ interface MessageType {
 
 // Fetch messages with pagination
 const fetchMessages = async ({ chatbotId, cursor, limit = 20, email }: { chatbotId: string; cursor?: string; limit?: number, email:string }) => {
-    const response = await fetch("https://geni-studio.vercel.app/api/getmessages", {
+    const response = await fetch("https://genistud.io/api/getmessages", {
         method: "POST",
         body: JSON.stringify({ chatbotId, cursor, limit, email }),
         headers: { "Content-Type": "application/json" },
@@ -74,7 +74,7 @@ const fetchMessages = async ({ chatbotId, cursor, limit = 20, email }: { chatbot
 
 // Send a new message
 const sendMessageApi = async ({ chatbotId, message, email }: { chatbotId: string; message: string, email:string }) => {
-    const response = await fetch("https://geni-studio.vercel.app/api/message", {
+    const response = await fetch("https://genistud.io/api/message", {
         method: "POST",
         body: JSON.stringify({ chatbotId, message, email }),
         headers: { "Content-Type": "application/json" },
